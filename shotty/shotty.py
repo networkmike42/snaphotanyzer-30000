@@ -1,7 +1,12 @@
-import boto3
-import sys
+# boto3 allows you to work with AWS
+# botocore deals with error messages from AWS
 # sys.argv puts the command line into a list so you can parse the arguments
+import sys
+import boto3
+import botocore
+
 import click
+
 # a better way of parsing the command line arguments
 
 # Set up the Boto session
@@ -115,8 +120,13 @@ def stop_instances(project):
 # since the code is the same and reusable, create the function and call it instead of the code.
     instances = filter_instances(project)
     for i in instances:
-        print("Stoping {0}".format(i.id))
-        i.stop()
+        print("Stopping {0}...".format(i.id))
+        try:
+            i.stop()
+        except botocore.exceptions.ClientError as e:
+            print(" Could not stop {0}. ".format(i.id) + str(e))
+            continue
+    return
 
 # when the command is start
 # shotty.py instances start --project=Valkyrie
@@ -127,9 +137,13 @@ def start_instances(project):
 # since thes code is the same and reusable, create the function and call it instead of the code.
     instances = filter_instances(project)
     for i in instances:
-        print("Starting {0}".format(i.id))
-        i.start()
-
+        print("Starting {0}...".format(i.id))
+        try:
+            i.start()
+        except botocore.exceptions.ClientError as e:
+            print(" Could not start {0}. ".format(i.id) + str(e))
+            continue
+    return
 # when the command is snapshot
 # shotty.py instances snapshot --project=Valkyrie
 @instances.command('snapshot')
