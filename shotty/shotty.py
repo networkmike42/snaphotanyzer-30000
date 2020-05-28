@@ -139,9 +139,18 @@ def create_snapshots(project):
 # since thes code is the same and reusable, create the function and call it instead of the code.
     instances = filter_instances(project)
     for i in instances:
-        for v in volumes:
+# Stop the instance before taking a snapshot.  wait until its stopped
+        print("Stopping instance {0}...".format(i.id))
+        i.stop()
+        i.wait_until_stopped()
+        for v in i.volumes.all():
             print("creating snapshot of instance {0}, Volume {1}".format(i.id, v.id))
             v.create_snapshot(Description="Created by SnapshotAlyzer 3000")
+#start the instance back up and be sure its up before moving on to the next instance
+        print("Starting instance {0}...".format(i.id))
+        i.start()
+        i.wait_until_running()
+    print("jobs done!")
     return
 
 # Here is the running program
