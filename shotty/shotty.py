@@ -36,9 +36,12 @@ def cli():
 def snapshots():
     """Commands for snapshots"""
 @snapshots.command('list')
-@click.option('--project', default=None, help="Only snapshots for projects (tag Project:<name>)")
+@click.option('--project', default=None,
+              help="Only snapshots for projects (tag Project:<name>)")
+@click.option('--all', 'list_all', default=False, is_flag=True,
+              help="List all snapshots for each volume, not just the most recent")
 # Call ec2 looking for snapshots with the instances
-def list_snapshots(project):
+def list_snapshots(project, list_all):
 # This is for click
     "List EC2 snapshots"
 # since the code is the same and reusable, create the function and call it instead of the code.
@@ -55,6 +58,8 @@ def list_snapshots(project):
 # .strftime("%c") to nicely format the time
                     s.start_time.strftime("%c")
                 )))
+# if the snapshot state matches leave this loop.  This will only get the first completed snapshot
+                if s.state == 'completed' and not list_all:break
     return
 
 # Defining a group based off the volumes command
