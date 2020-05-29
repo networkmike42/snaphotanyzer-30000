@@ -1,9 +1,10 @@
 from setuptools import setup
 
 # This will create a package to distribute a python program.
-# run python setup.py bdist_wheel to create a wheel.
-# pip3 install dist/snapshotalyzer_3000-0.1-py3-none-any.whl
-# this install the the package and its dependencies in your environment
+# run "python setup.py bdist_wheel" to create a wheel.
+# "pip3 install dist/snapshotalyzer_3000-0.1-py3-none-any.whl"
+# this installs the the package and its dependencies in your python environment
+# just run "shotty --help" to run the application
 
 setup(
     name='snapshotalyzer-3000',
